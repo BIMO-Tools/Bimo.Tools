@@ -30,6 +30,6 @@
 	  <None Update="README.md" Pack="true" PackagePath="" />
 	</ItemGroup>
   <ItemGroup>
-    <Compile Remove="tests/**/*.cs" />
+    <Compile Remove="tests/**/*.cs;examples/**/*.cs" />
   </ItemGroup>
 </Project>
