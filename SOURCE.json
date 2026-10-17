@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "source_commit": "f21a9f6ea74397d26b7877ca748d3b7f676f7718",
+  "source_commit": "432fb262fe873a0ec3bd8fc191ee8fda1788e61d",
   "source_subdirectory": "src/Bimo.Tools",
   "source_of_truth": "private BIMO monorepo (stage 1)",
   "nuget_publication": "not performed by public snapshot CI",
@@ -18,11 +18,11 @@
     "Attributes/Inputs/InputAttribute.cs": "34566784a7bc1cf2c29ba35d468647ec7a9129ce4b3e5dfcf0b0761c7883e506",
     "Attributes/Inputs/ParameterInputAttribute.cs": "98e31493fc82ed09b288934b6308aaebc0b68972ed4938c0ffe659739126bba2",
     "Attributes/VisibleWhenAttribute.cs": "1d309489df62f3a8c286b8ec98fdb598b647d95297b0b218ccad4b648d20cb71",
-    "Bimo.Tools.csproj": "9869a4fecedad2fadad9f150ff17fb75df6100d300080a36997df870a4c05962",
+    "Bimo.Tools.csproj": "38f2de985b834d71597097fe244cd0448408082acedf82a73c085f96dba6f68d",
     "CONTRIBUTING.md": "9dc905d8223b0485336471fceece41f42a3b9331cfc8bd6be6145e8309877762",
     "LICENSE": "79fe8a9149a6a4810d2617af3e85d82bc2a5d1832713a9c2472e0369b1fb63e1",
     "Output.cs": "2ce91f1a4ab59b2fee551c18f0114db9820c58b42264c3f2d8eae1cb3288168e",
-    "README.md": "d7b75f7db0c35f867e6f5641aefc72062a5b94dabc64331fe3138e9f04b52b9e",
+    "README.md": "eb7f6f0aecf3a24d1b41788176cacceaccb854cf8f74ed505106fe34c58d1a1c",
     "Resources/TransactionResources.cs": "d1c5f5963c9b8471286a61f2aae532b686b37fb6bfba88fc03dd75b911bdb15f",
     "Resources/TransactionResources.resx": "f43ba3f184bb4aeb01e01b9f971f25a77e39dd0c59478635cc4da080d7b173a9",
     "Resources/TransactionResources.ru.resx": "48583ff14461c75f0fbc322fab429188ec3a04033a452d3d25fb027aa968d4b0",
@@ -35,7 +35,10 @@
     "Services/TransactionExecutionResultExtensions.cs": "e3fd9a260ab5b023783d61c916576a5f6bd56c535e8168b3be10bab1c98c5cd0",
     "Services/TransactionExecutionStatus.cs": "0c83931abc5b064fa5f825a9cc8bee4493736b4df850ac08f317b7b464c946eb",
     "Services/TransactionManagerExtensions.cs": "935c4fa9aecce1855adc46d5d7b94c66696c24d47041847b3c2744673b177542",
-    "tests/Bimo.Tools.Smoke/Bimo.Tools.Smoke.csproj": "b8f9e7e52b069d237298d71bc83ef4803e40d602a1d7fd427e34eb6ebf195897",
-    "tests/Bimo.Tools.Smoke/Program.cs": "319a6964cbbbeeac05160fe3dcd17efba8b6817abfac6acafc87693cd2af3202"
+    "docs/quick-start.md": "d7d051ac09ee7dd0d213572bfe66f80816d863ec4a8e49c4b8692ea5827cb0aa",
+    "examples/HelloBimo/HelloBimo.csproj": "fc72b859064925f696dcc2a031f0f0d45c3a41ffc9392e11b34beb0dcc3f64ff",
+    "examples/HelloBimo/HelloBimoCommand.cs": "bfcf080e092a51b06f795569d53ccc731fb4b9796252bd953c15f857948c5230",
+    "tests/Bimo.Tools.Smoke/Bimo.Tools.Smoke.csproj": "31382080eab30f89e8cece80a2adfacd3772b2ec4e27d8b50f873e1cdfd21aa7",
+    "tests/Bimo.Tools.Smoke/Program.cs": "edc91d0b63b4ee2c8e8c4deb752093a6247c7c5443d27476c019af3db04dd1b0"
   }
 }

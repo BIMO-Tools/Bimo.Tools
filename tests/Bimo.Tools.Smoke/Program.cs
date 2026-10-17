@@ -1,11 +1,21 @@
 using System.Reflection;
 using Bimo.Tools.Attributes;
 using Bimo.Tools.Services;
+using Bimo.QuickStart;
 
 var command = typeof(ExampleCommand).GetMethod(nameof(ExampleCommand.Execute))!;
 var attribute = command.GetCustomAttribute<BimoAttribute>();
 Assert(attribute is { Guid: "d4f35d5d-c439-4e49-b9ac-4ab06c091150" }, "BimoAttribute contract");
 Assert(attribute!.SettingsType == typeof(ExampleSettings), "SettingsType contract");
+
+// The public Quick Start example must build and execute against the published SDK.
+var helloMethod = typeof(HelloBimoCommand).GetMethod(nameof(HelloBimoCommand.Execute))!;
+var helloAttribute = helloMethod.GetCustomAttribute<BimoAttribute>();
+Assert(helloAttribute?.DisplayName == "Hello BIMO", "Quick Start command display name");
+Assert(helloAttribute?.Guid == "e377b294-9ddd-4a55-a90e-b428c118c89e", "Quick Start GUID");
+var notifier = new FakeUserNotifier();
+HelloBimoCommand.Execute(notifier);
+Assert(notifier.Message == "Hello from BIMO!", "Quick Start host notifier interaction");
 
 var meta = new DynamoInputAttribute("", DynamoInputKind.ScopeBoxSelection, "Scope Box", "{\"min\":2}");
 Assert(meta.GetMetaInt("min") == 2, "DynamoInput metadata");
@@ -54,4 +64,15 @@ internal sealed class FakeTransactionManager : ITransactionManager
         return new TransactionExecutionResult(
             LastOptions.Rollback ? TransactionExecutionStatus.RolledBack : TransactionExecutionStatus.Committed);
     }
+}
+
+internal sealed class FakeUserNotifier : IUserNotifier
+{
+    public string? Message { get; private set; }
+
+    public void Inform(string? message = null) => Message = message;
+    public bool Warn(string mainInstruction, string mainContent) => true;
+    public void SayError(string message) => throw new InvalidOperationException(message);
+    public void DisplayResult(Bimo.Tools.Output output, string? commandName = null) =>
+        throw new NotSupportedException();
 }

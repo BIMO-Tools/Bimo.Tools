@@ -17,29 +17,13 @@ Pin the approved SDK version, for example:
 
 Bimo.Tools 1.1.0 requires a matching updated BIMO host (baseline: **Toolbar 0.45.0 beta** for the existing Trace Facade consumer). API and assembly versions alone do not guarantee host compatibility.
 
-## Example
+## Quick Start: your first command
 
-```csharp
-using Bimo.Tools.Attributes;
-using Bimo.Tools.Services;
+Follow **[Quick Start: build and run Hello BIMO](docs/quick-start.md)** for a working C# project, the exact DLL build command and instructions to load it in Revit.
 
-public sealed class HelloSettings
-{
-    public string Message { get; set; } = "Hello from BIMO";
-}
+The example source lives in [`examples/HelloBimo/`](examples/HelloBimo/HelloBimoCommand.cs). It uses the published NuGet package and the host-provided `IUserNotifier` service — no Revit API or private BIMO projects are needed.
 
-public static class HelloCommand
-{
-    [Bimo("d4f35d5d-c439-4e49-b9ac-4ab06c091150",
-        DisplayName = "Hello BIMO", SettingsType = typeof(HelloSettings))]
-    public static void Execute(ISettings<HelloSettings> settings)
-    {
-        System.Console.WriteLine(settings.Value.Message);
-    }
-}
-```
-
-Build the command DLL against the approved NuGet version. **Do not bundle `Bimo.Tools.dll`** or its resource satellites with the user-command archive; the BIMO host provides them.
+**Do not deploy `Bimo.Tools.dll`** or its satellite resource assemblies beside a command DLL; the installed BIMO host supplies them.
 
 ## Development
 
