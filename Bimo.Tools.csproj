@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<PackageId>Bimo.Tools</PackageId>
+		
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>$(AssemblyVersion)</FileVersion>
+		<PackageVersion>1.1.0</PackageVersion>
+		<Version>$(PackageVersion)</Version>
+		
+		<Authors>BIMO Tools</Authors>
+		<Company>BIMO Tools</Company>
+		<Description>A library containing common types and abstractions for BIMO tools.</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://bimo.tools/</PackageProjectUrl>
+		<PackageTags>BIMO;Revit;BIM;commands;SDK</PackageTags>
+		<RepositoryUrl>https://github.com/BIMO-Tools/Bimo.Tools</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	  <None Update="LICENSE" Pack="true" PackagePath="" />
+	  <None Update="README.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+  <ItemGroup>
+    <Compile Remove="tests/**/*.cs" />
+  </ItemGroup>
+</Project>
