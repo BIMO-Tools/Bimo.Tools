@@ -1,11 +1,11 @@
 {
   "schema": 1,
-  "source_commit": "cb3270d392f7fd8efa3e1fa56e066c76bc3109b1",
+  "source_commit": "55d745621c5a98162878bc3db660d05d3c368e97",
   "source_subdirectory": "src/Bimo.Tools",
   "source_of_truth": "private BIMO monorepo (stage 1)",
   "nuget_publication": "not performed by public snapshot CI",
   "files_sha256": {
-    ".github/workflows/ci.yml": "115e60081105f4786ae491b66a269543f42f38ff4cac2f878d230ed31795bc99",
+    ".github/workflows/ci.yml": "ed527706d0405ffbc5bebb51855d2d62eb1c58a5f185608b70902f7f83a45158",
     ".gitignore": "96d946d88da4c22aa6ea4adb9bce09c8366d991d4df173514e1f8e3d0c083489",
     "Attributes/AdvancedAttribute.cs": "c317160c13d85f10fa31e66d8e74832b51af129b2de7679a17a94870b4cb77c4",
     "Attributes/BimoAttribute.cs": "fa12f0f4729bed27de4b1162114816afc2eac8d0593afc05e846382787b3ef3e",
@@ -35,7 +35,7 @@
     "Services/TransactionExecutionResultExtensions.cs": "e3fd9a260ab5b023783d61c916576a5f6bd56c535e8168b3be10bab1c98c5cd0",
     "Services/TransactionExecutionStatus.cs": "0c83931abc5b064fa5f825a9cc8bee4493736b4df850ac08f317b7b464c946eb",
     "Services/TransactionManagerExtensions.cs": "935c4fa9aecce1855adc46d5d7b94c66696c24d47041847b3c2744673b177542",
-    "tests/Bimo.Tools.Smoke/Bimo.Tools.Smoke.csproj": "0e6802b963a1104a1869150b902f8045717f206942b756cbbabef2ab8beb881f",
+    "tests/Bimo.Tools.Smoke/Bimo.Tools.Smoke.csproj": "b8f9e7e52b069d237298d71bc83ef4803e40d602a1d7fd427e34eb6ebf195897",
     "tests/Bimo.Tools.Smoke/Program.cs": "319a6964cbbbeeac05160fe3dcd17efba8b6817abfac6acafc87693cd2af3202"
   }
 }

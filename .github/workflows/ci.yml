@@ -20,5 +20,22 @@ jobs:
         run: dotnet build Bimo.Tools.csproj --configuration Release
       - name: Execute isolated SDK smoke consumer
         run: dotnet run --project tests/Bimo.Tools.Smoke/Bimo.Tools.Smoke.csproj --configuration Release
+      - name: Verify anonymous nuget.org SDK consumer (version 1.1.0)
+        run: dotnet run --project tests/Bimo.Tools.Smoke/Bimo.Tools.Smoke.csproj --configuration Release -p:UsePublishedPackage=true
+      - name: Validate provenance hashes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          p = Path('SOURCE.json')
+          provenance = json.loads(p.read_text())
+          manifest = provenance['files_sha256']
+          actual = {f.as_posix() for f in Path('.').rglob('*') if f.is_file() and not any(part in ('.git', 'bin', 'obj', 'artifacts') for part in f.parts) and f != p}
+          assert set(manifest) == actual, (sorted(set(manifest) - actual), sorted(actual - set(manifest)))
+          for file, expected in manifest.items():
+              assert hashlib.sha256(Path(file).read_bytes()).hexdigest() == expected, file
+          print('Public source manifest verified:', len(manifest), 'files')
+          PY
       - name: Verify package can be built (never publish)
         run: dotnet pack Bimo.Tools.csproj --configuration Release --output artifacts

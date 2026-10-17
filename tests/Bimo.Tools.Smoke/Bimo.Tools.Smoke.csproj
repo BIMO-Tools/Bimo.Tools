@@ -5,7 +5,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(UsePublishedPackage)' != 'true'">
     <ProjectReference Include="../../Bimo.Tools.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UsePublishedPackage)' == 'true'">
+    <PackageReference Include="Bimo.Tools" Version="[1.1.0]" />
   </ItemGroup>
 </Project>
