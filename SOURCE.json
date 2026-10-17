@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "source_commit": "55d745621c5a98162878bc3db660d05d3c368e97",
+  "source_commit": "f21a9f6ea74397d26b7877ca748d3b7f676f7718",
   "source_subdirectory": "src/Bimo.Tools",
   "source_of_truth": "private BIMO monorepo (stage 1)",
   "nuget_publication": "not performed by public snapshot CI",
@@ -26,7 +26,7 @@
     "Resources/TransactionResources.cs": "d1c5f5963c9b8471286a61f2aae532b686b37fb6bfba88fc03dd75b911bdb15f",
     "Resources/TransactionResources.resx": "f43ba3f184bb4aeb01e01b9f971f25a77e39dd0c59478635cc4da080d7b173a9",
     "Resources/TransactionResources.ru.resx": "48583ff14461c75f0fbc322fab429188ec3a04033a452d3d25fb027aa968d4b0",
-    "Services/IProgressRunner.cs": "41f045c7d07eebc06a67a8e09322286dee6261f487a4416c339ba7737d470b77",
+    "Services/IProgressRunner.cs": "4ddb6e7e404debf4259737cabffa105202b9b00788dd5d2478ba1c476c482b89",
     "Services/ISettings.cs": "616f74fa114bc3bc7cecdf0d5795bb86c583c5acee053d767523fef6f9de0edf",
     "Services/ITransactionManager.cs": "b74854fa1e34e175ead5c86cdedd4bb69da7057961160d992026e06b0a6bb9c5",
     "Services/IUserNotifier.cs": "72733abe2566e7fc7bc755b39c476fb22213a3fcf5acf0f7e28024deb8df196d",
