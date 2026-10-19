@@ -26,4 +26,20 @@ public sealed class BimoAttribute(string guid) : Attribute
     public Type? CustomWindowType { get; set; }
 
     public Type? SettingsType { get; set; }
+
+    /// <summary>
+    /// Opt in after auditing for agent trials: the host rolls back model transactions
+    /// and suppresses framework prompts. Business settings and reports are optional.
+    /// External effects and changes in other documents are not undone.
+    /// </summary>
+    public bool SupportsAgentDryRun { get; set; }
+
+    /// <summary>Opt in after auditing persistent model effects and autonomous execution.</summary>
+    public bool SupportsAgentCommit { get; set; }
+
+    /// <summary>Optional embedded resource base name in this command assembly.</summary>
+    public string? CommitWarningResourceName { get; set; }
+
+    /// <summary>Resource key for the warning shown before actual execution, not a trial.</summary>
+    public string? CommitWarningResourceKey { get; set; }
 }

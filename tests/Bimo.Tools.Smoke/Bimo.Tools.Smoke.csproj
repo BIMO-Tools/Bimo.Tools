@@ -5,6 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(UsePublishedPackage)' != 'true'">
+    <DefineConstants>$(DefineConstants);SOURCE_SDK</DefineConstants>
+  </PropertyGroup>
   <ItemGroup Condition="'$(UsePublishedPackage)' != 'true'">
     <ProjectReference Include="../../Bimo.Tools.csproj" />
   </ItemGroup>
