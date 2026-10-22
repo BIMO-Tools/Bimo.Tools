@@ -36,6 +36,19 @@ Assert(executed && manager.LastOptions?.Rollback == true, "Rollback contract");
 
 #if SOURCE_SDK
 // These optional authoring contracts are new source SDK APIs, not part of NuGet 1.1.0.
+attribute.CatalogId = "example";
+Assert(attribute.CatalogId == "example", "Static catalog metadata contract");
+Assert(
+    new BimoServiceAttribute(typeof(IDisposable)).ServiceType == typeof(IDisposable),
+    "Client service metadata contract"
+);
+Assert(new BimoServiceAttribute().ServiceType is null, "Self registration contract");
+Assert(
+    !typeof(BimoAttribute)
+        .Assembly.GetExportedTypes()
+        .Any(type => type.Name == "CommandCatalogAttribute"),
+    "Catalog wrapper metadata belongs to the host, not the SDK"
+);
 var selection = new CommandServices();
 Bimo.Tools.Commands.ICommandHandler handler = new SelectionReportHandler();
 var report = handler.Execute(selection);

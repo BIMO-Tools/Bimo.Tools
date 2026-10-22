@@ -20,6 +20,12 @@ public sealed class BimoAttribute(string guid) : Attribute
     public string? IconKey { get; set; }
 
     /// <summary>
+    /// Optional stable catalog ID. Descriptions come from Resources.{id}Catalog
+    /// in the source command namespace and assembly; this does not publish a DLL.
+    /// </summary>
+    public string? CatalogId { get; set; }
+
+    /// <summary>
     /// Gets or sets the type of the custom window to use for the settings dialog.
     /// If not specified, a default window will be used.
     /// </summary>
