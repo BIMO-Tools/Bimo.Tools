@@ -34,6 +34,12 @@ public sealed class BimoAttribute(string guid) : Attribute
     public Type? SettingsType { get; set; }
 
     /// <summary>
+    /// Optional document requirement checked by the host before settings preparation
+    /// and command service activation. The default declares no restriction.
+    /// </summary>
+    public CommandDocumentRequirement RequiredDocument { get; set; }
+
+    /// <summary>
     /// Opt in after auditing for agent trials: the host rolls back model transactions
     /// and suppresses framework prompts. Business settings and reports are optional.
     /// External effects and changes in other documents are not undone.
