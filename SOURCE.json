@@ -5,7 +5,7 @@
   "source_of_truth": "private BIMO monorepo (stage 1)",
   "nuget_publication": "not performed by public snapshot CI",
   "files_sha256": {
-    ".github/workflows/ci.yml": "ed527706d0405ffbc5bebb51855d2d62eb1c58a5f185608b70902f7f83a45158",
+    ".github/workflows/ci.yml": "186d832d5af80ab83395c691657e73c07ce817cf9bcda435acf14edea04046c4",
     ".gitignore": "96d946d88da4c22aa6ea4adb9bce09c8366d991d4df173514e1f8e3d0c083489",
     "Attributes/AdvancedAttribute.cs": "c317160c13d85f10fa31e66d8e74832b51af129b2de7679a17a94870b4cb77c4",
     "Attributes/BimoAttribute.cs": "ca188f616f6175b761784f7b95c33c49f9d5d7e34a651d593842a9546a83c2e1",
