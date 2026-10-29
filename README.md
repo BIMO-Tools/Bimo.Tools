@@ -33,9 +33,15 @@ Restore packages from the standard NuGet feed. You do not need access to BIMO's 
 
 The [Toolbar 0.46.0 release notes](https://bimo.tools/releases) document the 1.3.0 contracts. Check the release notes and your installed Toolbar version before upgrading command DLLs. The host controls which commands can be invoked by an AI agent; installing the SDK alone does **not** grant agent execution permission.
 
-## Build your first command
+## Developer documentation
 
-Start with the [Hello BIMO walkthrough](docs/quick-start.md) and the [example project](examples/HelloBimo/).
+| Start with | What you will learn |
+| --- | --- |
+| **[Hello BIMO Quick Start](docs/quick-start.md)** | Build a verified command DLL, register it in Revit, edit a setting and run it from the Ribbon |
+| **[C# command authoring guide](docs/command-authoring.md)** | Create your own command: identity and loading, settings, presets, scoped services, reports, Revit requirements, MCP capabilities and troubleshooting |
+| **[Example project](examples/HelloBimo/)** | Inspect the complete SDK 1.3.0 source and project file |
+
+### Build your first command
 
 **Hello BIMO with SDK 1.3.0:** The sample and the published-package smoke test both reference **[1.3.0]**. This open project is the sole home of `HelloWorldTools`, moved out of BIMO Samples; the private project no longer compiles these greeting commands. The example covers settings, scoped client services, structured reports and project-document requirements. See the [Quick Start](docs/quick-start.md) for build, loading and test instructions.
 
