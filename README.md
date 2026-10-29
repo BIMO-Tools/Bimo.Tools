@@ -35,9 +35,9 @@ The [Toolbar 0.46.0 release notes](https://bimo.tools/releases) document the 1.3
 
 ## Build your first command
 
-Start with the [Hello World walkthrough](docs/quick-start.md) and the [example project](examples/HelloBimo/).
+Start with the [Hello BIMO walkthrough](docs/quick-start.md) and the [example project](examples/HelloBimo/).
 
-**Hello World with SDK 1.3.0:** The sample and the published-package smoke test both reference **[1.3.0]**. This open project is the sole home of `HelloWorldTools`, moved out of BIMO Samples; the private project no longer compiles these greeting commands. The example covers settings, scoped client services, structured reports and project-document requirements. See the [Quick Start](docs/quick-start.md) for build, loading and test instructions.
+**Hello BIMO with SDK 1.3.0:** The sample and the published-package smoke test both reference **[1.3.0]**. This open project is the sole home of `HelloWorldTools`, moved out of BIMO Samples; the private project no longer compiles these greeting commands. The example covers settings, scoped client services, structured reports and project-document requirements. See the [Quick Start](docs/quick-start.md) for build, loading and test instructions.
 
 In outline:
 

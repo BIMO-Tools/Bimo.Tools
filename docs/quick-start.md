@@ -1,6 +1,6 @@
 # Quick Start: create a BIMO C# command
 
-This walkthrough builds the **Hello World** sample against the published [Bimo.Tools 1.3.0 package](https://www.nuget.org/packages/Bimo.Tools/1.3.0). It illustrates settings, an invocation-scoped client service, a structured report, and project-document admission without a Revit API reference. Use **BIMO Toolbar 0.46.0 or a verified compatible host**.
+This walkthrough builds the **Hello BIMO** sample against the published [Bimo.Tools 1.3.0 package](https://www.nuget.org/packages/Bimo.Tools/1.3.0). It illustrates settings, an invocation-scoped client service, a structured report, and project-document admission without a Revit API reference. Use **BIMO Toolbar 0.46.0 or a verified compatible host**.
 
 ## Requirements
 
@@ -47,7 +47,7 @@ You can use that DLL directly from this location or copy **only the command DLL*
 3. Open a Revit **project**. No alpha-features switch is needed in Toolbar 0.46.0.
 4. Under **DLL commands** (Russian UI: **DLL-команды**), click **Add / Browse** and select the full path to `HelloBimo.dll`, not the path to `Bimo.Tools.dll`.
 5. Save the settings and **restart Revit**. BIMO discovers the configured DLL and generates the command during Revit startup.
-6. Find **Hello World** in the BIMO ribbon. Its generated settings contain a **Message** value (default: **Привет из пользовательской команды!**). Run the command; BIMO presents a report containing that message.
+6. Find **Hello BIMO** in the BIMO ribbon. Its generated settings contain a **Message** value (default: **Привет из пользовательской команды!**). Run the command; BIMO presents a report containing that message.
 
 User command DLLs execute inside the Revit process with the user's permissions. Load only assemblies from sources you trust.
 
@@ -60,7 +60,7 @@ The example combines four authoring contracts:
 - **Structured report:** `HelloWorldReport` returns the greeting; BIMO presents the result rather than the DLL opening its own dialog.
 - **Document requirement:** `RequiredDocument = Project` requires an active Revit project before settings or services are created.
 
-Change the message, rebuild and restart Revit. Keep the existing GUID when updating this command; generate a new GUID for a new command. Public static entrypoints must be non-generic and non-overloaded. Hello World retains `SupportsAgentDryRun = true`. Agent trials still require exact host approval; the command does not opt in to committed agent execution.
+Change the message, rebuild and restart Revit. Keep the existing GUID when updating this command; generate a new GUID for a new command. Public static entrypoints must be non-generic and non-overloaded. Hello BIMO retains `SupportsAgentDryRun = true`. Agent trials still require exact host approval; the command does not opt in to committed agent execution.
 
 ## Troubleshooting
 
