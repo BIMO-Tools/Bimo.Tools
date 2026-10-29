@@ -1,13 +1,13 @@
 # Quick Start: create a BIMO C# command
 
-This walkthrough builds the **Hello BIMO** sample pinned to the public [Bimo.Tools 1.1.0 package](https://www.nuget.org/packages/Bimo.Tools/1.1.0). It demonstrates the original stable entrypoint and `IUserNotifier` contract without requiring a Revit API reference. For new commands using the **1.3.0** contracts and **Toolbar 0.46.0**, see the [SDK version and compatibility guidance](../README.md#sdk-and-toolbar-compatibility); the checked-in sample remains a 1.1.0 baseline.
+This walkthrough builds the **Hello World** sample against the published [Bimo.Tools 1.3.0 package](https://www.nuget.org/packages/Bimo.Tools/1.3.0). It illustrates settings, an invocation-scoped client service, a structured report, and project-document admission without a Revit API reference. Use **BIMO Toolbar 0.46.0 or a verified compatible host**.
 
 ## Requirements
 
-- **Windows** with a compatible installed [BIMO Add-in for Revit](https://bimo.tools). The documented host baseline for this **Bimo.Tools 1.1.0** sample is **Toolbar 0.45.0 beta**. BIMO Toolbar **0.46.0** also documents the newer **1.3.0** contract set; always check host compatibility for the exact SDK version in use.
+- **Windows** with [BIMO Add-in for Revit](https://bimo.tools), **Toolbar 0.46.0** or a verified compatible host. Earlier 0.45.0 beta hosts do not support these 1.3.0 contracts.
 - A suitable installed **Autodesk Revit** version supported by your BIMO add-in.
 - The **.NET 8 SDK or newer** for `dotnet build` and internet access for the first NuGet restore. The command targets **.NET Standard 2.0**, so it does not need a separate Revit API reference.
-- **Toolbar 0.45.0 beta:** enable **Use alpha features** in General settings if your installed build requires it. **Toolbar 0.46.0 and later:** configured DLL sources load at startup without this switch.
+- Open an **active project document** (not a family document). This example declares `RequiredDocument = CommandDocumentRequirement.Project` and will not run without a project. There is no **Use alpha features** setting in Toolbar 0.46.0.
 
 ## 1. Get the example
 
@@ -20,8 +20,8 @@ cd Bimo.Tools
 
 The editable sample is:
 
-- [`examples/HelloBimo/HelloBimoCommand.cs`](../examples/HelloBimo/HelloBimoCommand.cs) — one public static method marked with `[Bimo]`.
-- [`examples/HelloBimo/HelloBimo.csproj`](../examples/HelloBimo/HelloBimo.csproj) — standalone library with the **exact** `Bimo.Tools [1.1.0]` NuGet package reference.
+- [`examples/HelloBimo/HelloBimoCommand.cs`](../examples/HelloBimo/HelloBimoCommand.cs) — the sole `HelloWorldTools` implementation, moved from BIMO Samples into this open project. `HelloWorld` is the single command and demonstrates the 1.3.0 contracts.
+- [`examples/HelloBimo/HelloBimo.csproj`](../examples/HelloBimo/HelloBimo.csproj) — standalone library with the **exact** `Bimo.Tools [1.3.0]` NuGet package reference.
 
 ## 2. Build the DLL
 
@@ -44,31 +44,34 @@ You can use that DLL directly from this location or copy **only the command DLL*
 
 1. Open Revit with a compatible BIMO Add-in for Revit installed.
 2. Open BIMO **Open Settings** → **General**.
-3. If running **Toolbar 0.45.0 beta**, enable **Use alpha features** when required. **Toolbar 0.46.0** has no such switch.
+3. Open a Revit **project**. No alpha-features switch is needed in Toolbar 0.46.0.
 4. Under **DLL commands** (Russian UI: **DLL-команды**), click **Add / Browse** and select the full path to `HelloBimo.dll`, not the path to `Bimo.Tools.dll`.
 5. Save the settings and **restart Revit**. BIMO discovers the configured DLL and generates the command during Revit startup.
-6. Find the **Hello BIMO** command in the BIMO ribbon and run it. The host should display **Hello from BIMO!**.
+6. Find **Hello World** in the BIMO ribbon. Its generated settings contain a **Message** value (default: **Привет из пользовательской команды!**). Run the command; BIMO presents a report containing that message.
 
 User command DLLs execute inside the Revit process with the user's permissions. Load only assemblies from sources you trust.
 
-## 4. Adapt the command
+## 4. Understand the 1.3.0 example
 
-Edit [`HelloBimoCommand.cs`](../examples/HelloBimo/HelloBimoCommand.cs), change the display name/message, and rebuild. If you create **another** command, generate a fresh GUID for its `[Bimo]` attribute; keep a given command's GUID stable across releases.
+The example combines four authoring contracts:
 
-Use a **public**, non-generic static method in a **public** class. Avoid method overloads (the generator requires unique method names). Host services such as `IUserNotifier` are passed as method parameters when the command runs.
+- **Settings:** `[DisplayName("Message")]` exposes the property in the settings editor. `HelloWorldSettings.Message` is editable in BIMO. The host passes an invocation-specific `ISettings<HelloWorldSettings>` snapshot.
+- **Scoped service:** `[BimoService]` registers an internal formatter behind the public `IHelloWorldFormatter` contract, resolved per invocation.
+- **Structured report:** `HelloWorldReport` returns the greeting; BIMO presents the result rather than the DLL opening its own dialog.
+- **Document requirement:** `RequiredDocument = Project` requires an active Revit project before settings or services are created.
 
-Rebuild the library and restart Revit to reload the changed command.
+Change the message, rebuild and restart Revit. Keep the existing GUID when updating this command; generate a new GUID for a new command. Public static entrypoints must be non-generic and non-overloaded. Hello World retains `SupportsAgentDryRun = true`. Agent trials still require exact host approval; the command does not opt in to committed agent execution.
 
 ## Troubleshooting
 
-- **The command is missing:** confirm **DLL commands** points to the compiled `HelloBimo.dll` rather than an SDK DLL, and restart Revit. Confirm the file still exists at the configured path. Only on older hosts that expose **Use alpha features**, check that switch as well.
+- **The command is missing:** confirm **DLL commands** points to the compiled `HelloBimo.dll` rather than an SDK DLL, and restart Revit. Confirm the file still exists at the configured path. Ensure an active project document is open; an older host may not support this SDK.
 - **A method is not discovered:** it must be `public static` in a public, non-generic type and carry a valid, unique `[Bimo("guid")]` attribute. Do not overload the method name.
-- **Assembly/type errors:** use a host compatible with the pinned `Bimo.Tools 1.1.0`; do not bundle another copy of `Bimo.Tools.dll` or its satellites with the command.
+- **Assembly/type errors:** use Toolbar 0.46.0 or a verified host compatible with `Bimo.Tools 1.3.0`; do not bundle another copy of `Bimo.Tools.dll` or its satellites with the command.
 - **Edits don't show up:** rebuild in **Release**, verify the DLL path and restart Revit. Generation is cached until its inputs change.
 - **Build fails:** check the installed .NET SDK (`dotnet --info`) and NuGet connectivity (`dotnet restore`).
 
 ## Validation boundary
 
-The public CI compiles the example from the **published** `Bimo.Tools 1.1.0` NuGet package and exercises its attributed method with a fake host notifier. This tests the original public baseline, **not the 1.3.0 features or their compatibility with Toolbar 0.46.0**, and **does not replace a manual installed-Revit smoke test**.
+The public CI builds this sample using **published Bimo.Tools 1.3.0** and runs the smoke consumer against both the extracted source SDK and anonymous NuGet 1.3.0. Tests verify metadata, settings, the client service declaration and direct report production. They **do not** instantiate the real BIMO generator/DI host or replace a manual installed-Revit acceptance test.
 
 The SDK's source of truth currently remains the private BIMO monorepo; public changes are synchronized through reviewed pull requests. The example never publishes NuGet or changes the SDK runtime.

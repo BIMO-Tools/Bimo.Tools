@@ -1,6 +1,8 @@
+using System.ComponentModel;
 using System.Reflection;
-using Bimo.QuickStart;
+using Bimo.MyUserCommands;
 using Bimo.Tools.Attributes;
+using Bimo.Tools.Commands;
 using Bimo.Tools.Services;
 
 var command = typeof(ExampleCommand).GetMethod(nameof(ExampleCommand.Execute))!;
@@ -8,14 +10,46 @@ var attribute = command.GetCustomAttribute<BimoAttribute>();
 Assert(attribute is { Guid: "d4f35d5d-c439-4e49-b9ac-4ab06c091150" }, "BimoAttribute contract");
 Assert(attribute!.SettingsType == typeof(ExampleSettings), "SettingsType contract");
 
-// The public Quick Start example must build and execute against the published SDK.
-var helloMethod = typeof(HelloBimoCommand).GetMethod(nameof(HelloBimoCommand.Execute))!;
+var helloMethod = typeof(HelloWorldTools).GetMethod(nameof(HelloWorldTools.HelloWorld))!;
 var helloAttribute = helloMethod.GetCustomAttribute<BimoAttribute>();
-Assert(helloAttribute?.DisplayName == "Hello BIMO", "Quick Start command display name");
-Assert(helloAttribute?.Guid == "e377b294-9ddd-4a55-a90e-b428c118c89e", "Quick Start GUID");
-var notifier = new FakeUserNotifier();
-HelloBimoCommand.Execute(notifier);
-Assert(notifier.Message == "Hello from BIMO!", "Quick Start host notifier interaction");
+Assert(helloAttribute?.DisplayName == "Hello World", "Quick Start command display name");
+Assert(helloAttribute?.SettingsType == typeof(HelloWorldSettings), "Quick Start settings type");
+Assert(
+    helloAttribute?.RequiredDocument == CommandDocumentRequirement.Project,
+    "Project policy metadata"
+);
+Assert(
+    Guid.Parse(helloAttribute!.Guid) == Guid.Parse("4b2f90e1-62fa-46ff-b20a-dabdb1a7305a"),
+    "Quick Start GUID"
+);
+var service = typeof(HelloWorldTools)
+    .Assembly.GetTypes()
+    .Single(t =>
+        t.GetCustomAttribute<BimoServiceAttribute>()?.ServiceType == typeof(IHelloWorldFormatter)
+    );
+Assert(service.GetConstructor(Type.EmptyTypes) != null, "Public service constructor");
+var formatter = (IHelloWorldFormatter)Activator.CreateInstance(service)!;
+Assert(
+    typeof(HelloWorldSettings)
+        .GetProperty(nameof(HelloWorldSettings.Message))!
+        .GetCustomAttribute<DisplayNameAttribute>()
+        is not null,
+    "Message is exposed in the BIMO settings editor"
+);
+Assert(helloAttribute.SupportsAgentDryRun, "Existing Hello World agent trial opt-in");
+var helloSettings = new HelloWorldSettings { Message = "  Configured greeting  " };
+var helloReport = HelloWorldTools.HelloWorld(
+    new SampleSettings<HelloWorldSettings>(helloSettings),
+    formatter
+);
+Assert(
+    helloReport.Title == "Hello World" && helloReport.Summary == "Configured greeting",
+    "Configured greeting report"
+);
+Assert(
+    helloSettings.Message == "  Configured greeting  ",
+    "Formatting preserves the settings snapshot"
+);
 
 var meta = new DynamoInputAttribute(
     "",
@@ -34,8 +68,6 @@ executed = false;
 manager.ExecuteAndEnsureRolledBack("temporary", () => executed = true);
 Assert(executed && manager.LastOptions?.Rollback == true, "Rollback contract");
 
-#if SOURCE_SDK
-// These optional authoring contracts are new source SDK APIs, not part of NuGet 1.1.0.
 attribute.CatalogId = "example";
 Assert(attribute.CatalogId == "example", "Static catalog metadata contract");
 Assert(
@@ -66,13 +98,18 @@ foreach (var status in Enum.GetValues<Bimo.Tools.Commands.CommandStatus>())
     var outcome = new Bimo.Tools.Commands.CommandStatusReport(status, "Outcome");
     Assert(outcome.Status == status && outcome.Summary == "Outcome", "Status-only report");
 }
-#endif
-Console.WriteLine("Bimo.Tools smoke checks passed.");
+Console.WriteLine("Bimo.Tools 1.3.0 smoke checks passed.");
 
 static void Assert(bool condition, string name)
 {
     if (!condition)
         throw new InvalidOperationException($"Failed: {name}");
+}
+
+internal sealed class SampleSettings<T>(T value) : ISettings<T>
+    where T : class
+{
+    public T Value { get; } = value;
 }
 
 public sealed class ExampleSettings
@@ -116,21 +153,6 @@ internal sealed class FakeTransactionManager : ITransactionManager
     }
 }
 
-internal sealed class FakeUserNotifier : IUserNotifier
-{
-    public string? Message { get; private set; }
-
-    public void Inform(string? message = null) => Message = message;
-
-    public bool Warn(string mainInstruction, string mainContent) => true;
-
-    public void SayError(string message) => throw new InvalidOperationException(message);
-
-    public void DisplayResult(Bimo.Tools.Output output, string? commandName = null) =>
-        throw new NotSupportedException();
-}
-
-#if SOURCE_SDK
 internal sealed class CommandServices : IServiceProvider, Bimo.Tools.Commands.ICommandSelection
 {
     public bool CanPromptForSelection => false;
@@ -160,4 +182,3 @@ internal sealed class SelectionReport(IReadOnlyList<string> ids) : Bimo.Tools.Co
     public override string Summary => "Selected element";
     public override IReadOnlyList<string> SelectableElementUniqueIds => ids;
 }
-#endif

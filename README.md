@@ -27,7 +27,7 @@ Restore packages from the standard NuGet feed. You do not need access to BIMO's 
 
 | SDK version | Toolbar compatibility / scope |
 | --- | --- |
-| **1.1.0** | Documented baseline: **Toolbar 0.45.0 beta**. Used by the public Hello BIMO sample and its smoke test. |
+| **1.1.0** | Documented baseline: **Toolbar 0.45.0 beta**. Historical baseline for the original Hello BIMO sample. |
 | **1.2.0** | Adds command-description and client-service authoring contracts; requires a matching SDK/host combination. Do not assume support from the 0.45.0 host. |
 | **1.3.0** | Supported by **Toolbar 0.46.0**. Includes resource-backed command descriptions, invocation-scoped client services, and project-document requirements checked before settings and service activation. |
 
@@ -35,9 +35,9 @@ The [Toolbar 0.46.0 release notes](https://bimo.tools/releases) document the 1.3
 
 ## Build your first command
 
-Start with the [Hello BIMO walkthrough](docs/quick-start.md) and the [example project](examples/HelloBimo/).
+Start with the [Hello World walkthrough](docs/quick-start.md) and the [example project](examples/HelloBimo/).
 
-**Sample-version note:** The checked-in Hello BIMO project and published-package smoke test intentionally remain pinned to **Bimo.Tools 1.1.0**, the original validated public baseline. The sample demonstrates the basic `[Bimo]` entrypoint and `IUserNotifier` contract; it is **not** a 1.3.0 compatibility or feature test. For 1.3.0 features, create a command project referencing **[1.3.0]** and test it with Toolbar **0.46.0**.
+**Hello World with SDK 1.3.0:** The sample and the published-package smoke test both reference **[1.3.0]**. This open project is the sole home of `HelloWorldTools`, moved out of BIMO Samples; the private project no longer compiles these greeting commands. The example covers settings, scoped client services, structured reports and project-document requirements. See the [Quick Start](docs/quick-start.md) for build, loading and test instructions.
 
 In outline:
 
@@ -64,18 +64,26 @@ The SDK does not include the Autodesk Revit API, BIMO host internals, or an MCP 
 
 ```sh
 dotnet build Bimo.Tools.csproj --configuration Release
-dotnet run --project tests/Bimo.Tools.Smoke/Bimo.Tools.Smoke.csproj --configuration Release
+dotnet run --project tests/Bimo.Tools.Smoke/Bimo.Tools.Smoke.csproj --configuration Release -p:UsePublishedPackage=false
+
+dotnet run --project tests/Bimo.Tools.Smoke/Bimo.Tools.Smoke.csproj --configuration Release -p:UsePublishedPackage=true
 dotnet pack Bimo.Tools.csproj --configuration Release
 ```
 
-The public CI checks the SDK and its smoke consumer; it **does not** publish NuGet packages or validate a full installed-Revit integration.
+The example and smoke consumer default to published **NuGet 1.3.0**. Pass
+`-p:UsePublishedPackage=false` on the command line to validate the extracted source
+SDK: the global property selects project references consistently in both projects.
+Explicit `true` selects package references throughout the graph. Run the two
+commands above separately to validate both providers.
+
+Public CI tests SDK source plus an anonymous **NuGet 1.3.0** consumer. This does **not** publish NuGet packages or validate execution in an installed Revit host.
 
 ### Public source snapshot vs. released package
 
 This repository is a **reviewed public snapshot** extracted from the private BIMO monorepo, which remains the source of truth during the current extraction stage.
 
 - The public `Bimo.Tools.csproj` now specifies **1.3.0**, synchronized from the reviewed private SDK through [public sync PR #5](https://github.com/BIMO-Tools/Bimo.Tools/pull/5).
-- The Hello BIMO sample and published-package smoke test are pinned to **1.1.0**.
+- The Hello BIMO sample and published-package smoke test are pinned to **1.3.0**.
 - The **1.3.0 NuGet/host contract** is documented by the Toolbar 0.46.0 release; the synchronized public sources do not, by themselves, prove that their bytes match the published NuGet package.
 
 The extraction source commit and file hashes are recorded in [`SOURCE.json`](SOURCE.json). This snapshot is not guaranteed to be byte-for-byte equivalent to any published NuGet artifact. Keep the package version derived from the reviewed upstream SDK source; it is not an instruction to republish packages from this public repository.
