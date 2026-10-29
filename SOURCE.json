@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "source_commit": "60775a9e6e9a5c5227e47de65dd3dcba37eb6482",
+  "source_commit": "9bcdc03b41d46c8a7d7e70ec53a952199b11d881",
   "source_subdirectory": "src/Bimo.Tools",
   "source_of_truth": "private BIMO monorepo (stage 1)",
   "nuget_publication": "not performed by public snapshot CI",
@@ -26,7 +26,7 @@
     "Commands/CommandReport.cs": "9e31109dffdcf88b12644653596eb016c8dfc4643c2d2d703789a5f0fcc10e45",
     "LICENSE": "79fe8a9149a6a4810d2617af3e85d82bc2a5d1832713a9c2472e0369b1fb63e1",
     "Output.cs": "2ce91f1a4ab59b2fee551c18f0114db9820c58b42264c3f2d8eae1cb3288168e",
-    "README.md": "dea86f7b78228763c8b1d294e3b1c10c689e9b2a8f94358e3add4e1987855263",
+    "README.md": "ece0a3a0c3960bf7d226747e21e9e5d33e6997676c3697a308a67de5308f9e54",
     "Resources/TransactionResources.cs": "d1c5f5963c9b8471286a61f2aae532b686b37fb6bfba88fc03dd75b911bdb15f",
     "Resources/TransactionResources.resx": "f43ba3f184bb4aeb01e01b9f971f25a77e39dd0c59478635cc4da080d7b173a9",
     "Resources/TransactionResources.ru.resx": "48583ff14461c75f0fbc322fab429188ec3a04033a452d3d25fb027aa968d4b0",
@@ -39,10 +39,10 @@
     "Services/TransactionExecutionResultExtensions.cs": "e3fd9a260ab5b023783d61c916576a5f6bd56c535e8168b3be10bab1c98c5cd0",
     "Services/TransactionExecutionStatus.cs": "0c83931abc5b064fa5f825a9cc8bee4493736b4df850ac08f317b7b464c946eb",
     "Services/TransactionManagerExtensions.cs": "935c4fa9aecce1855adc46d5d7b94c66696c24d47041847b3c2744673b177542",
-    "docs/quick-start.md": "c97bd7ca95f0565ad6715634b086f97d0c45e83495daac81a511542ebeed1274",
+    "docs/quick-start.md": "bde1781c9c3a8733990468959f0e72e7433387caa6571700be7546381d8c69ee",
     "examples/HelloBimo/HelloBimo.csproj": "1988ccafe8394c240456db65ce1ab7264b9f02a6ea8874edbeb1ee65a5145764",
-    "examples/HelloBimo/HelloBimoCommand.cs": "a48501b06fa0eef9bf7d0878be4f24066a00b923e6a31a00d9461f7d14b8df9f",
+    "examples/HelloBimo/HelloBimoCommand.cs": "294a353d66fa8300cac3429b7e529e305a1937ddaaf17fbe45509f0a15157c21",
     "tests/Bimo.Tools.Smoke/Bimo.Tools.Smoke.csproj": "0e3f7489534f29f2057b4aa73d928bc50a19d6d5fa9f968ab600d26320fc243d",
-    "tests/Bimo.Tools.Smoke/Program.cs": "afcdda5859a66ea5633e5fac52b23cce80c8a9fa728e22c098ec4306c12ae6fa"
+    "tests/Bimo.Tools.Smoke/Program.cs": "235dc8d4583072e04f057ae86a91e76e9bdbb5123655114b3db26c08b09d7f6e"
   }
 }

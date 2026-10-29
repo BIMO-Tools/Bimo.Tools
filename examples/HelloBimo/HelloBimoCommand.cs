@@ -10,7 +10,7 @@ public static class HelloWorldTools
 {
     [Bimo(
         "4B2F90E1-62FA-46FF-B20A-DABDB1A7305A",
-        DisplayName = "Hello World",
+        DisplayName = "Hello BIMO",
         SettingsType = typeof(HelloWorldSettings),
         RequiredDocument = CommandDocumentRequirement.Project,
         SupportsAgentDryRun = true
@@ -45,6 +45,6 @@ internal sealed class HelloWorldFormatter : IHelloWorldFormatter
 
 public sealed class HelloWorldReport(string summary) : CommandReport
 {
-    public override string Title => "Hello World";
+    public override string Title => "Hello BIMO";
     public override string Summary { get; } = summary;
 }

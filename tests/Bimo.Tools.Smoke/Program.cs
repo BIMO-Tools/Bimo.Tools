@@ -12,7 +12,7 @@ Assert(attribute!.SettingsType == typeof(ExampleSettings), "SettingsType contrac
 
 var helloMethod = typeof(HelloWorldTools).GetMethod(nameof(HelloWorldTools.HelloWorld))!;
 var helloAttribute = helloMethod.GetCustomAttribute<BimoAttribute>();
-Assert(helloAttribute?.DisplayName == "Hello World", "Quick Start command display name");
+Assert(helloAttribute?.DisplayName == "Hello BIMO", "Quick Start command display name");
 Assert(helloAttribute?.SettingsType == typeof(HelloWorldSettings), "Quick Start settings type");
 Assert(
     helloAttribute?.RequiredDocument == CommandDocumentRequirement.Project,
@@ -43,7 +43,7 @@ var helloReport = HelloWorldTools.HelloWorld(
     formatter
 );
 Assert(
-    helloReport.Title == "Hello World" && helloReport.Summary == "Configured greeting",
+    helloReport.Title == "Hello BIMO" && helloReport.Summary == "Configured greeting",
     "Configured greeting report"
 );
 Assert(
