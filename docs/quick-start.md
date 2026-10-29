@@ -2,6 +2,8 @@
 
 This walkthrough builds the **Hello BIMO** sample against the published [Bimo.Tools 1.3.0 package](https://www.nuget.org/packages/Bimo.Tools/1.3.0). It illustrates settings, an invocation-scoped client service, a structured report, and project-document admission without a Revit API reference. Use **BIMO Toolbar 0.46.0 or a verified compatible host**.
 
+Use this page to complete your **first** command in Revit. For the full SDK authoring contract, including creating a different command, settings, presets, dependency injection, reports and MCP, see the [C# developer guide](command-authoring.md).
+
 ## Requirements
 
 - **Windows** with [BIMO Add-in for Revit](https://bimo.tools), **Toolbar 0.46.0** or a verified compatible host. Earlier 0.45.0 beta hosts do not support these 1.3.0 contracts.
@@ -60,7 +62,7 @@ The example combines four authoring contracts:
 - **Structured report:** `HelloWorldReport` returns the greeting; BIMO presents the result rather than the DLL opening its own dialog.
 - **Document requirement:** `RequiredDocument = Project` requires an active Revit project before settings or services are created.
 
-Change the message, rebuild and restart Revit. Keep the existing GUID when updating this command; generate a new GUID for a new command. Public static entrypoints must be non-generic and non-overloaded. Hello BIMO retains `SupportsAgentDryRun = true`. Agent trials still require exact host approval; the command does not opt in to committed agent execution.
+Change the message, rebuild and restart Revit. Keep the existing GUID when updating this command; generate a new GUID for a new command. Public static entrypoints must be non-generic and non-overloaded. Hello BIMO retains `SupportsAgentDryRun = true`. Agent trials still require exact host approval; the command does not opt in to committed agent execution. See [MCP and AI-agent execution](command-authoring.md#mcp-and-ai-agent-execution) before enabling these flags on your own code.
 
 ## Troubleshooting
 
