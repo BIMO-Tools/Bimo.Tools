@@ -1,4 +1,4 @@
-# Author custom BIMO commands with C# (SDK 1.3.0)
+# Author custom BIMO commands with C# (SDK 1.4.1)
 
 This guide is for developers who want to build and maintain their own DLL commands for **BIMO Toolbar** in Autodesk Revit. It covers the public SDK authoring contract, not the private BIMO host implementation.
 
@@ -13,25 +13,28 @@ This guide is for developers who want to build and maintain their own DLL comman
 | Add editable inputs and presets | [Settings and presets](#settings-and-presets) |
 | Reuse logic via dependency injection | [Per-invocation services](#per-invocation-services) |
 | Return useful output | [Results and reports](#results-and-reports) |
+| Report correctable input errors | [Expected input errors](#expected-input-errors-sdk-14) |
 | Make a command available to an AI agent | [MCP and AI-agent execution](#mcp-and-ai-agent-execution) |
 | Diagnose load or build failures | [Troubleshooting](#troubleshooting) |
 
 ## Requirements and compatibility
 
-- Install Autodesk Revit and a compatible BIMO Toolbar. For SDK **1.3.0**, the documented baseline is **BIMO Toolbar 0.46.0**.
-- Use a .NET SDK capable of building a C# library targeting `netstandard2.0` (the example uses .NET 8 for building).
-- Restore the publicly released [Bimo.Tools NuGet package](https://www.nuget.org/packages/Bimo.Tools/1.3.0). Private BIMO repositories are **not** required for authoring.
+- Install Autodesk Revit and a **compatible BIMO Toolbar**. The documented **Toolbar 0.46.0** baseline uses **SDK 1.3.0**. The published **SDK 1.4.1** adds expected-error support and requires an updated, verified host; do not assume 0.46.0 supports the 1.4 contract.
+- Use a .NET SDK capable of building a C# library targeting `netstandard2.0` (the Hello BIMO example uses .NET 8 for building).
+- Restore [Bimo.Tools 1.4.1 from nuget.org](https://www.nuget.org/packages/Bimo.Tools/1.4.1), or pin 1.3.0 for the documented 0.46.0 baseline. Private BIMO repositories are **not** required for authoring.
 - Build a **command DLL**, not a new Revit add-in. BIMO loads explicitly configured DLLs and generates Toolbar command adapters on Revit startup.
+
+The [Hello BIMO Quick Start](quick-start.md) and its published-package smoke test deliberately stay on **SDK 1.3.0**; they are not proof of 1.4.1 compatibility in an installed Revit host.
 
 The public `Bimo.Tools` assembly contains attributes and interfaces, **not** a Revit API runtime or an MCP server. Targeting .NET Standard 2.0 does not guarantee every other dependency you add will work in every installed Revit version. Check your Revit-specific references separately.
 
 ## Create your own command
 
-For a minimal command that displays a notification, create a `netstandard2.0` class library and pin the compatible package:
+For a minimal command that displays a notification, create a `netstandard2.0` class library and pin the **1.4.1** package (only if the installed BIMO host has been verified for 1.4.x):
 
 ```powershell
 dotnet new classlib -n MyBimoCommands -f netstandard2.0
-dotnet add MyBimoCommands/MyBimoCommands.csproj package Bimo.Tools --version 1.3.0
+dotnet add MyBimoCommands/MyBimoCommands.csproj package Bimo.Tools --version 1.4.1
 ```
 
 In the project, use a *unique, stable* identifier for each command:
@@ -212,7 +215,22 @@ A static command can return `void` for a simple operation, or return a public co
 
 `CommandReport` also supports additional details and selectable element UniqueIds. Only report genuinely persistent elements as selectable results; an element created during a rolled-back trial must **not** be presented as a surviving model change.
 
-For a command that requires an active Revit project, add `RequiredDocument = CommandDocumentRequirement.Project` to `[Bimo]`. This rejects no-document and family-document contexts **before** settings or client service activation. The default is `None`, and SDK 1.3.0 exposes only `None` and `Project`.
+For a command that requires an active Revit project, add `RequiredDocument = CommandDocumentRequirement.Project` to `[Bimo]`. This rejects no-document and family-document contexts **before** settings or client service activation. The default is `None`; SDK 1.4.1 still exposes only `None` and `Project`.
+
+## Expected input errors (SDK 1.4+)
+
+Use `Bimo.Tools.Commands.CommandInputException` for an **expected input rejection that the user can correct**, for example a missing selection or a known unsupported element type:
+
+```csharp
+using Bimo.Tools.Commands;
+
+if (selection.GetSelectedElementUniqueIds().Count == 0)
+    throw new CommandInputException("Select at least one supported element.");
+```
+
+The **compatible BIMO host** reports this as `Failed`, presents one localized error notification in Ribbon or a bounded agent-safe message through MCP, and records any diagnostic inner exception privately. There is no need for the entrypoint to catch and wrap the error as `OperationCanceledException`; cancellation remains `Cancelled`.
+
+**Do not use `CommandInputException`** for actual user cancellation, unexpected Revit API errors, broken invariants, transaction faults, or other failures users cannot fix by adjusting input. The public message must be localized and safe: no filesystem paths, credentials, personally identifying values, raw exceptions or stack traces. SDK 1.3.0 does **not** contain this type, and an SDK 1.4.1 command requires a matching host that implements this classification.
 
 ## MCP and AI-agent execution
 
@@ -239,7 +257,7 @@ dotnet run --project tests/Bimo.Tools.Smoke/Bimo.Tools.Smoke.csproj -c Release -
 dotnet run --project tests/Bimo.Tools.Smoke/Bimo.Tools.Smoke.csproj -c Release -p:UsePublishedPackage=true
 ```
 
-These verify the exported source API and the **published NuGet 1.3.0** consumer independently. They do not start Revit, generate real host wrappers or verify live model changes. For your own DLL, complete an **installed-Revit acceptance check**: build, load and restart; inspect the Ribbon label; edit settings; launch the normal command; verify its result; validate no-project/family behavior if required; then separately test permitted agent trials and document rollback if relevant.
+These verify the latest exported SDK source and the deliberately pinned **published NuGet 1.3.0** Hello BIMO consumer independently. A successful source build does not by itself confirm compatibility between a new 1.4.x command and an installed host. They do not start Revit, generate real host wrappers or verify live model changes. For your own DLL, complete an **installed-Revit acceptance check**: build, load and restart; inspect the Ribbon label; edit settings; launch the normal command; verify its result; validate no-project/family behavior if required; then separately test permitted agent trials and document rollback if relevant.
 
 The public repository is a **reviewed SDK snapshot**. Its `SOURCE.json` records provenance; public CI does not publish a NuGet package. Contributions to SDK contracts are reviewed and carried to the private upstream before a controlled public sync.
 

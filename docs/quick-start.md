@@ -2,6 +2,8 @@
 
 This walkthrough builds the **Hello BIMO** sample against the published [Bimo.Tools 1.3.0 package](https://www.nuget.org/packages/Bimo.Tools/1.3.0). It illustrates settings, an invocation-scoped client service, a structured report, and project-document admission without a Revit API reference. Use **BIMO Toolbar 0.46.0 or a verified compatible host**.
 
+**Why 1.3.0?** [Bimo.Tools 1.4.1](https://www.nuget.org/packages/Bimo.Tools/1.4.1) is published, but this runnable example is intentionally pinned to the documented 0.46.0/1.3.0 host pairing. Do not change the sample's package reference solely because a newer SDK exists: verify the installed host supports the 1.4 expected-error contract first. For new SDK features, use the [authoring guide](command-authoring.md).
+
 Use this page to complete your **first** command in Revit. For the full SDK authoring contract, including creating a different command, settings, presets, dependency injection, reports and MCP, see the [C# developer guide](command-authoring.md).
 
 ## Requirements
@@ -74,6 +76,6 @@ Change the message, rebuild and restart Revit. Keep the existing GUID when updat
 
 ## Validation boundary
 
-The public CI builds this sample using **published Bimo.Tools 1.3.0** and runs the smoke consumer against both the extracted source SDK and anonymous NuGet 1.3.0. Tests verify metadata, settings, the client service declaration and direct report production. They **do not** instantiate the real BIMO generator/DI host or replace a manual installed-Revit acceptance test.
+The public CI builds this sample using **published Bimo.Tools 1.3.0** and runs the smoke consumer against both the latest exported source SDK and anonymous NuGet 1.3.0. Tests verify metadata, settings, the client service declaration and direct report production. They **do not** instantiate the real BIMO generator/DI host or replace a manual installed-Revit acceptance test.
 
 The SDK's source of truth currently remains the private BIMO monorepo; public changes are synchronized through reviewed pull requests. The example never publishes NuGet or changes the SDK runtime.
