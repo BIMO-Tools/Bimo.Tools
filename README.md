@@ -13,15 +13,15 @@ It provides command attributes, settings metadata, and host-provided service int
 
 ## Install the SDK
 
-For new commands targeting the **BIMO Toolbar 0.46.0** contract set, use **Bimo.Tools 1.3.0**:
+The latest published package is **Bimo.Tools 1.4.1**. Use it only with an installed BIMO host verified for its contracts, including the 1.4 expected-error handling:
 
 ```xml
-<PackageReference Include="Bimo.Tools" Version="[1.3.0]" />
+<PackageReference Include="Bimo.Tools" Version="[1.4.1]" />
 ```
 
-Restore packages from the standard NuGet feed. You do not need access to BIMO's private application source to author a command.
+For the **documented BIMO Toolbar 0.46.0 baseline**, continue using SDK **1.3.0** and the matching [Hello BIMO Quick Start](docs/quick-start.md) until you have verified a newer host. Restore packages from nuget.org without private repository access.
 
-**Match the SDK to the installed host.** Package version, .NET Standard compatibility, and an unchanged assembly version are not guarantees of runtime compatibility with an older Toolbar.
+**Match the SDK to the installed host.** Package version, .NET Standard compatibility, and an unchanged assembly version do not guarantee compatibility with an older Toolbar.
 
 ### SDK and Toolbar compatibility
 
@@ -30,8 +30,10 @@ Restore packages from the standard NuGet feed. You do not need access to BIMO's 
 | **1.1.0** | Documented baseline: **Toolbar 0.45.0 beta**. Historical baseline for the original Hello BIMO sample. |
 | **1.2.0** | Adds command-description and client-service authoring contracts; requires a matching SDK/host combination. Do not assume support from the 0.45.0 host. |
 | **1.3.0** | Supported by **Toolbar 0.46.0**. Includes resource-backed command descriptions, invocation-scoped client services, and project-document requirements checked before settings and service activation. |
+| **1.4.0** | Introduces `CommandInputException` for expected, user-correctable errors; requires an updated host that recognizes this exception as `Failed` rather than `Cancelled`. |
+| **1.4.1** | Documentation/README refresh of 1.4.0. Requires the same matching 1.4-compatible host; no new SDK API is introduced by this patch release. |
 
-The [Toolbar 0.46.0 release notes](https://bimo.tools/releases) document the 1.3.0 contracts. Check the release notes and your installed Toolbar version before upgrading command DLLs. The host controls which commands can be invoked by an AI agent; installing the SDK alone does **not** grant agent execution permission.
+The [BIMO release notes](https://bimo.tools/releases) document installed Toolbar versions. The previously verified 0.46.0/1.3.0 pairing does **not** prove 1.4.x host compatibility. Verify the deployed host before upgrading command DLLs. Installing the SDK alone does **not** grant AI-agent execution permission.
 
 ## Developer documentation
 
@@ -39,11 +41,11 @@ The [Toolbar 0.46.0 release notes](https://bimo.tools/releases) document the 1.3
 | --- | --- |
 | **[Hello BIMO Quick Start](docs/quick-start.md)** | Build a verified command DLL, register it in Revit, edit a setting and run it from the Ribbon |
 | **[C# command authoring guide](docs/command-authoring.md)** | Create your own command: identity and loading, settings, presets, scoped services, reports, Revit requirements, MCP capabilities and troubleshooting |
-| **[Example project](examples/HelloBimo/)** | Inspect the complete SDK 1.3.0 source and project file |
+| **[Example project](examples/HelloBimo/)** | Inspect the separately pinned, verified SDK 1.3.0 sample project |
 
 ### Build your first command
 
-**Hello BIMO with SDK 1.3.0:** The sample and the published-package smoke test both reference **[1.3.0]**. This open project is the sole home of `HelloWorldTools`, moved out of BIMO Samples; the private project no longer compiles these greeting commands. The example covers settings, scoped client services, structured reports and project-document requirements. See the [Quick Start](docs/quick-start.md) for build, loading and test instructions.
+**Hello BIMO uses SDK 1.3.0 intentionally.** The example and published-package smoke consumer remain pinned to **[1.3.0]** and target the documented Toolbar 0.46.0 baseline. They demonstrate settings, scoped client services, reports and project-document requirements. They have **not** been migrated to 1.4.1 or revalidated against a 1.4-compatible installed host. Follow the [Quick Start](docs/quick-start.md) for the existing tested exercise.
 
 In outline:
 
@@ -63,6 +65,7 @@ Starting with **Toolbar 0.46.0**, configured DLL commands load at Revit startup 
 - **Settings and input metadata:** contracts for command configuration and generated editors.
 - **Host-provided services:** interfaces for notifications, settings, transactions, and progress, where supported by the installed host.
 - **Structured command results:** public report and status contracts for commands that need them.
+- **Correctable command errors (1.4+):** `CommandInputException` with a localized, user-safe message, classified as `Failed` by a compatible host without an entrypoint `try/catch`.
 
 The SDK does not include the Autodesk Revit API, BIMO host internals, or an MCP server. Using Autodesk API types requires the appropriate separate Revit references and host compatibility.
 
@@ -73,7 +76,7 @@ dotnet build Bimo.Tools.csproj --configuration Release
 dotnet run --project tests/Bimo.Tools.Smoke/Bimo.Tools.Smoke.csproj --configuration Release -p:UsePublishedPackage=false
 
 dotnet run --project tests/Bimo.Tools.Smoke/Bimo.Tools.Smoke.csproj --configuration Release -p:UsePublishedPackage=true
-dotnet pack Bimo.Tools.csproj --configuration Release
+dotnet pack Bimo.Tools.csproj --configuration Release -p:GeneratePackageOnBuild=false
 ```
 
 The example and smoke consumer default to published **NuGet 1.3.0**. Pass
@@ -82,15 +85,15 @@ SDK: the global property selects project references consistently in both project
 Explicit `true` selects package references throughout the graph. Run the two
 commands above separately to validate both providers.
 
-Public CI tests SDK source plus an anonymous **NuGet 1.3.0** consumer. This does **not** publish NuGet packages or validate execution in an installed Revit host.
+Public CI tests the current SDK source and the separately pinned **NuGet 1.3.0** Hello BIMO consumer. This is deliberate: it does **not** establish 1.4.1 compatibility with an installed Revit host, publish packages or validate live Revit execution.
 
 ### Public source snapshot vs. released package
 
 This repository is a **reviewed public snapshot** extracted from the private BIMO monorepo, which remains the source of truth during the current extraction stage.
 
-- The public `Bimo.Tools.csproj` now specifies **1.3.0**, synchronized from the reviewed private SDK through [public sync PR #5](https://github.com/BIMO-Tools/Bimo.Tools/pull/5).
-- The Hello BIMO sample and published-package smoke test are pinned to **1.3.0**.
-- The **1.3.0 NuGet/host contract** is documented by the Toolbar 0.46.0 release; the synchronized public sources do not, by themselves, prove that their bytes match the published NuGet package.
+- The public `Bimo.Tools.csproj` is synchronized from reviewed private SDK source and targets **1.4.1** in this snapshot.
+- The Hello BIMO sample and published-package smoke test remain pinned to **1.3.0** until a matching 1.4.x host is tested.
+- **NuGet publication is independent of source synchronization.** The snapshot and its `SOURCE.json` provenance do not prove binary identity with a previously published NuGet package or compatibility with an installed host.
 
 The extraction source commit and file hashes are recorded in [`SOURCE.json`](SOURCE.json). This snapshot is not guaranteed to be byte-for-byte equivalent to any published NuGet artifact. Keep the package version derived from the reviewed upstream SDK source; it is not an instruction to republish packages from this public repository.
 
