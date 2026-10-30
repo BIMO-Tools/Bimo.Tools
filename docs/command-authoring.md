@@ -53,11 +53,109 @@ public static class GreetingCommands
 }
 ```
 
-Generate a GUID once for a **new** command and preserve it when changing its name, implementation or DLL version. A rename should not create a second command identity. The public class and command method must be static-compatible: a public, non-generic class; a public, non-generic static method; **no overloaded command method names**. Parameters must be public host-supported service contracts. A settings parameter must match the declared `SettingsType`.
+Generate a GUID once for a **new** command and preserve it when changing its name, implementation or DLL version. A rename should not create a second command identity. Pass it directly to `[Bimo]` unless the same command GUID is also consumed elsewhere in the command code; avoid a separate `const string CommandGuid` that is only used by the attribute. The public class and command method must be static-compatible: a public, non-generic class; a public, non-generic static method; **no overloaded command method names**. Parameters must be public host-supported service contracts. A settings parameter must match the declared `SettingsType`.
 
 Build with `dotnet build MyBimoCommands/MyBimoCommands.csproj -c Release`. In Revit, open **BIMO → Open Settings → General → DLL commands**, add the **command DLL** file path, save and **restart Revit**. The generated command should appear on the BIMO ribbon.
 
 Do **not** add `Bimo.Tools.dll` or its satellite resources to the configured DLL list or copy them beside your command DLL. The installed host supplies its own compatible contracts. Include other libraries **your command actually requires** only when compatible with the target Revit host. Load code only from trusted sources: DLL commands execute inside Revit with the current user's permissions.
+
+## Recommended command architecture
+
+Start with the **smallest static entrypoint** that meets the requirement. A
+`public static` method marked with `[Bimo]` is the command boundary; the host
+generates its Revit adapter. Do not implement another `IExternalCommand`,
+command dispatcher or DI container inside the DLL.
+
+**Simple command:** keep a short operation in the static method and request
+only the existing host services it actually uses.
+
+```csharp
+using Bimo.Tools.Attributes;
+using Bimo.Tools.Services;
+
+public static class PingCommands
+{
+    // Generate a different GUID for every new command.
+    [Bimo("dd8ca0af-30e7-42b2-9298-fb888c80d7cb", DisplayName = "Ping")]
+    public static void Execute(IUserNotifier notifier) =>
+        notifier.Inform("BIMO is ready.");
+}
+```
+
+**Command with domain services:** when execution has substantial business
+logic, multiple stages, or dependencies worth testing independently, keep the
+static method as a thin delegate. Register the implementation in the **same
+configured DLL** with `[BimoService]`; the host creates it per invocation.
+This example shows the structure, not a complete model-processing algorithm.
+
+```csharp
+using Bimo.Tools.Attributes;
+using Bimo.Tools.Commands;
+
+public static class SelectionCommands
+{
+    [Bimo(
+        "a380ff5f-4e78-45be-9390-363a2d3e33ba",
+        DisplayName = "Selection summary",
+        RequiredDocument = CommandDocumentRequirement.Project
+    )]
+    public static SelectionSummaryReport Execute(ISelectionSummaryService service) =>
+        service.Execute();
+}
+
+public interface ISelectionSummaryService
+{
+    SelectionSummaryReport Execute();
+}
+
+[BimoService(typeof(ISelectionSummaryService))]
+internal sealed class SelectionSummaryService : ISelectionSummaryService
+{
+    private readonly ICommandSelection selection;
+
+    public SelectionSummaryService(ICommandSelection selection) =>
+        this.selection = selection;
+
+    public SelectionSummaryReport Execute() =>
+        new SelectionSummaryReport(selection.GetSelectedElementUniqueIds().Count);
+}
+
+public sealed class SelectionSummaryReport : CommandReport
+{
+    private readonly int count;
+
+    public SelectionSummaryReport(int count) => this.count = count;
+
+    public override string Title => "Selection summary";
+    public override string Summary => $"Selected: {count}";
+}
+```
+
+The host owns command registration, project-document admission when declared,
+settings/preset preparation, invocation-scoped DI and disposal, caller-specific
+selection/notifications, common progress and transaction **services**, exception
+and status normalization, telemetry, and Ribbon/MCP dispatch and report
+presentation. Request those contracts rather than duplicating their
+implementations. A `RequiredDocument = Project` declaration replaces manual
+project admission in the entrypoint; it does not replace feature-specific
+document or element validation.
+
+The command owns its **domain behavior**: supported elements, business
+validation, Revit geometry and model changes, tolerances, and any
+operation-specific preservation or post-commit verification. The host provides
+`ITransactionManager` but does not choose every command's write/verification
+boundary. In particular, an MCP trial transaction is **not** automatically a
+replacement for a command's Ribbon Dry Run or for a required check *after* an
+inner transaction commits but *before* the operation is accepted.
+
+Do not add a service interface for a trivial command, or move domain-specific
+guards into the host without a second proven consumer. For a command that needs
+settings, inject the existing `ISettings<T>` snapshot; for a modifying command,
+use the host's transaction/progress services and test commit, rollback and
+cancellation in real Revit. Agent capabilities remain explicit, audited opt-ins,
+not an automatic consequence of using a static method. See
+[per-invocation services](#per-invocation-services) and
+[MCP and AI-agent execution](#mcp-and-ai-agent-execution).
 
 ## Settings and presets
 
