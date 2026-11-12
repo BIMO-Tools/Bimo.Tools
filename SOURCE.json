@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "source_commit": "c9f7364d977b7dd50a1d6b453cdd00e28cfc7987",
+  "source_commit": "5cad5205c1db3683ebff3c43aae40dbd8324292a",
   "source_subdirectory": "src/Bimo.Tools",
   "source_of_truth": "private BIMO monorepo (stage 1)",
   "nuget_publication": "not performed by public snapshot CI",
@@ -40,7 +40,7 @@
     "Services/TransactionExecutionResultExtensions.cs": "e3fd9a260ab5b023783d61c916576a5f6bd56c535e8168b3be10bab1c98c5cd0",
     "Services/TransactionExecutionStatus.cs": "0c83931abc5b064fa5f825a9cc8bee4493736b4df850ac08f317b7b464c946eb",
     "Services/TransactionManagerExtensions.cs": "935c4fa9aecce1855adc46d5d7b94c66696c24d47041847b3c2744673b177542",
-    "docs/command-authoring.md": "46a4d6b8e4efa9b346848e18b8ec67c1afd52d7f2f1e93b981d0ee5370eb09cf",
+    "docs/command-authoring.md": "00469b88a23608abd72299198ecc7fe79a73fcfab01ad4adc99376d638a51d5f",
     "docs/quick-start.md": "8c6a8699e292674fdf53b21c193508b3e0cccfba8f559c607c89785295d3529c",
     "examples/HelloBimo/HelloBimo.csproj": "1988ccafe8394c240456db65ce1ab7264b9f02a6ea8874edbeb1ee65a5145764",
     "examples/HelloBimo/HelloBimoCommand.cs": "294a353d66fa8300cac3429b7e529e305a1937ddaaf17fbe45509f0a15157c21",
