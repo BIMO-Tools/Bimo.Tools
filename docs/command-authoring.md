@@ -10,6 +10,7 @@ This guide is for developers who want to build and maintain their own DLL comman
 | --- | --- |
 | Run one working example | [Hello BIMO quick start](quick-start.md) |
 | Create a different C# command | [Create your own command](#create-your-own-command) below |
+| Organize command files | [Recommended folder layout](#recommended-folder-layout) |
 | Add editable inputs and presets | [Settings and presets](#settings-and-presets) |
 | Reuse logic via dependency injection | [Per-invocation services](#per-invocation-services) |
 | Return useful output | [Results and reports](#results-and-reports) |
@@ -159,6 +160,32 @@ cancellation in real Revit. Agent capabilities remain explicit, audited opt-ins,
 not an automatic consequence of using a static method. See
 [per-invocation services](#per-invocation-services) and
 [MCP and AI-agent execution](#mcp-and-ai-agent-execution).
+
+### Recommended folder layout
+
+Give each command its own folder in the DLL project. Keep the static entrypoint
+in `<Command>/<Command>Command.cs`. It should be the only C# file at the root of
+that command folder. A command-specific `README.md` can sit alongside it.
+
+```text
+SatToFreeForm/
+├── SatToFreeFormCommand.cs
+├── README.md
+├── Models/
+│   └── SatToFreeFormReport.cs
+├── Services/
+│   ├── ISatToFreeFormService.cs
+│   └── SatToFreeFormService.cs
+└── Settings/
+    └── SatToFreeFormSettings.cs
+```
+
+Keep reports and other command-specific data types in `Models`, service
+interfaces and implementations in `Services`, editable settings types in
+`Settings`, and localized strings or other resources in `Resources`. Add a
+subfolder only when there is a file for it. A simple command can consist of
+just its entrypoint. Use a project-level `Shared` folder for code used by
+multiple commands.
 
 ## Settings and presets
 
